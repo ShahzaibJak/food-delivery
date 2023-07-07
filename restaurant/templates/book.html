@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+  <article>
+    <h1>Make a reservation</h1>
+    <!--Begin row-->
+    <div class="row">
+      <!--Begin col-->
+      {% if user.is_authenticated %}
+      <div class="column">
+        {% csrf_token %}
+        <form method="POST" id="form">
+          <!-- {% csrf_token %} -->
+          <p>
+            <label for="first_name">Name:</label>
+            <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+          </p>
+          <p>
+            <label for="reservation_date">Reservation date:</label>
+            <input type="date" id="reservation_date">
+          </p>
+          <p>
+            <label for="reservation_slot">Reservation time:</label>
+            <input type="time" id="reservation_slot">
+          </p>
+          <input type="text" value={{user}} id="user" style="display: none;" />
+          <button type="submit" id="button">Reserve</button>
+        </form>
+      </div>
+
+      {% else %}
+      <a style="color: gold;" class="nav-link" href="/login">Login</a> to make a reservation.
+      {% endif %}
+
+      <!--End col-->
+      <!--End col-->
+    </div>
+    <!--End row-->
+  </article>
+</section>
+{% endblock %}

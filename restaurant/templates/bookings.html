@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+  <article>
+    <h1>All Reservations</h1>
+    <!--Begin row-->
+    <div class="row">
+      <!--Begin col-->
+      <div class="column">
+        <pre id="bookings"></pre>
+      </div>
+      <!--End col-->
+
+      <!--Begin col-->
+      <div class="column">
+        <div class="videowrap">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3321.791577526413!2d73.06611267426801!3d33.636645739563306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df9505cfd4a5b9%3A0xa5b4afff026bf367!2sCrisp%20n%20Spice!5e0!3m2!1sen!2s!4v1688447904435!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+      <!--End col-->
+    </div>
+    <!--End row-->
+  </article>
+</section>
+<script>
+  const bookings = JSON.parse('{{ bookings|safe }}')
+  console.log(bookings);
+  const pretty_json = JSON.stringify(bookings,null,2)
+  document.getElementById('bookings').innerHTML = pretty_json
+</script>
+{% endblock %}
+

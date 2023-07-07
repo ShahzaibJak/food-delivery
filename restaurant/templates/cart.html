@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cart</h1>
+
+{% for item in cart.cartitem_set.all %}
+<div style="margin-bottom: 20px; background-color: beige; padding: 10px;border-radius: 10px; border: 1px solid burlywood;height: 85px;">
+    <img style="float: left; margin: 5px; width: 130px; height: 80px; border-radius: 10px;" src="\restaurant\static\img\{{ item.menu.name }}.jpg" class="card-img-top" alt="{{ item.menu.name }}">
+    <h3 style="margin: 0;">{{ item.menu.name }}</h3>
+    <p style="margin: 0; font-size: small;">Quantity: {{ item.quantity }}</p>
+    <p style="margin: 0; font-size: small;">Price: Rs.{{ item.menu.price|floatformat:2 }}</p>
+    <p style="margin: 0; font-size: small;">Subtotal: Rs.{{ item.menu.price }} * {{ item.quantity|floatformat:2 }}</p>
+</div>
+
+{% empty %}
+<div class="alert alert-info" role="alert">
+    Cart is empty
+</div>
+{% endfor %}
+
+{% if cart.items.all %}
+<div style=" margin-bottom: 20px;">
+    <div>
+        <h5>Total:</h5>
+        <p>${{ total|floatformat:2 }}</p>
+    </div>
+</div>
+<a style="width: 110px; margin: 3px;" href="{% url 'place_order' %}" id="button">Place Order</a>
+{% endif %}
+{% endblock %}
