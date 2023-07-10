@@ -1,0 +1,70 @@
+{% extends "admin/change_list.html" %}
+{% block content_title %}
+<h1>Most Sold Menu Items</h1>
+{% endblock %}
+
+{% block result_list %}
+<div class="results">
+    <table>
+        <!-- Table header -->
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Total Sold</th>
+            </tr>
+        </thead>
+
+        <!-- Table body -->
+        <tbody>
+            {% for menu in result_list %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td><a href="/admin/restaurant/menu/{{menu.id}}/change/"> {{ menu.name }}</a></td>
+                <td>{{ menu.price }}</td>
+                <td>{{ menu.total_sold }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Most Sold Menu Items - Graph</h2>
+    <canvas id="menuChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuData = JSON.parse('{{ menu_data_json|escapejs }}');
+            var labels = menuData.map(function(item) {
+                return item.name;
+            });
+            var data = menuData.map(function(item) {
+                return item.total_sold;
+            });
+
+            var ctx = document.getElementById('menuChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Sold',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+{% endblock %}

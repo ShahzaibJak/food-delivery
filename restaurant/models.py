@@ -16,7 +16,7 @@ class Menu(models.Model):
    name = models.CharField(max_length=200) 
    price = models.IntegerField(null=False) 
    menu_item_description = models.TextField(max_length=1000, default='') 
-
+   image = models.ImageField(null=True, blank=True, upload_to='images/')
    def __str__(self):
       return self.name
    
@@ -63,3 +63,9 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.menu.name} - Quantity: {self.quantity}"
+    
+class OrderSummary(Order):
+    class Meta:
+        proxy = True
+        verbose_name = 'Order Summary'
+        verbose_name_plural = 'Orders Summary'

@@ -1,0 +1,154 @@
+{% extends "admin/change_list.html" %}
+{% load humanize %}
+{% load custom_filters %}
+{% block content_title %}
+<h1> Orders Summary </h1>
+{% endblock %}
+{% block result_list %}
+<div class="results">
+    <table>
+        <!-- Table header -->
+        <thead>
+            <tr>
+                <th>
+                    <div class="text">
+                        <a href="#">ID</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">Username</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">Created at</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">
+                            <strong>Total Amount</strong>
+                        </a>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+
+        <!-- Table body -->
+        <tbody>
+            {% for row in summary %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td> {{ row.id }} </td>
+                <td> {{ row.user__username }} </td>
+                <td> {{ row.created_at | date }}</td>
+                <td>
+                    Rs.{{ row.total_sales }}
+                </td>
+            </tr>
+            {% endfor %}
+            <tr style="font-weight:bold; border-top:2px solid #DDDDDD;">
+                <td><b>Total</b></td>
+                <td></td>
+                <td></td>
+                <td><b> Rs. {{ summary_total.total_sales | default:0 }} </b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2> Sales over time </h2>
+    <style>
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 400px; /* Set a fixed height for the chart container */
+            padding: 20px;
+            overflow: hidden;
+        }
+    
+        .bar-chart .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+        }
+    
+        .bar-chart .chart-labels .label {
+            flex: 1;
+            text-align: center;
+        }
+    
+        .bar-chart .chart-bars {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            overflow: hidden; /* Adjust overflow property */
+            height: calc(100% - 30px); /* Subtract the height of chart-labels to ensure space for bars */
+        }
+    
+        .bar-chart .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+    
+        .bar-chart .bar {
+            position: relative;
+            background-color: #79aec8;
+            transition: background-color 0.3s;
+            max-width: 50%;
+            min-width: 10%;
+            /* Limit the width of each bar */
+        }
+    
+        .bar-chart .bar:hover {
+            background-color: #417690;
+        }
+    
+        .bar-chart .bar .bar-tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    
+        .bar-chart .bar:hover .bar-tooltip {
+            opacity: 1;
+        }
+    </style>
+    
+    <div class="results">
+        <div class="bar-chart">
+            <div class="chart-bars">
+                {% for x in summary_over_time %}
+                <div class="bar-wrapper">
+                    <div class="bar" style="height: {{ x.percentage }}%;"
+                        title="{{ x.total | intcomma }} | {{ x.period | date:'M/Y' }}">
+                        <div class="bar-tooltip">
+                            Rs.{{ x.total | intcomma }}<br>
+                            {{ x.period | date:"M/Y" }}
+                        </div>
+                    </div>
+                    <div class="label">{{ x.period | date:"M/Y" }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block pagination %}{% endblock %}

@@ -5,11 +5,18 @@
 
 {% for item in cart.cartitem_set.all %}
 <div style="margin-bottom: 20px; background-color: beige; padding: 10px;border-radius: 10px; border: 1px solid burlywood;height: 85px;">
-    <img style="float: left; margin: 5px; width: 130px; height: 80px; border-radius: 10px;" src="\restaurant\static\img\{{ item.menu.name }}.jpg" class="card-img-top" alt="{{ item.menu.name }}">
+    <img style="float: left; margin: 5px; width: 130px; height: 80px; border-radius: 10px;" src="{{ item.menu.image.url }}" class="card-img-top" alt="{{ item.menu.name }}">
     <h3 style="margin: 0;">{{ item.menu.name }}</h3>
     <p style="margin: 0; font-size: small;">Quantity: {{ item.quantity }}</p>
     <p style="margin: 0; font-size: small;">Price: Rs.{{ item.menu.price|floatformat:2 }}</p>
     <p style="margin: 0; font-size: small;">Subtotal: Rs.{{ item.menu.price }} * {{ item.quantity|floatformat:2 }}</p>
+
+    <form action="{% url 'update_cart_item' item.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.id }}">
+        <button type="submit" name="action" value="decrease" style="margin-right: 5px;">-</button>
+        <button type="submit" name="action" value="increase">+</button>
+    </form>
 </div>
 
 {% empty %}

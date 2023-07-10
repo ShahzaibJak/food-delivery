@@ -126,7 +126,7 @@ def add_to_cart(request, menu_id):
         cart_item.quantity += 1
         cart_item.save()
 
-    return redirect('cart')
+    return redirect('menu')
 
 
 def cart(request):
@@ -163,3 +163,20 @@ def order_details(request, order_id):
     for i in items:
         total+=i.menu.price*i.quantity
     return render(request, 'order.html', {'order': order,'total':total})
+
+
+def update_cart_item(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id)
+    action = request.POST.get('action')
+
+    if action == 'increase':
+        cart_item.quantity += 1
+        cart_item.save()
+    elif action == 'decrease':
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+        else:
+            cart_item.delete()
+
+    return redirect('cart')  # Redirect to the cart pag
